@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/authStore';
 import { useCart } from '../hooks/useCart';
 import { api, handleApiError, handleApiSuccess } from '../utils/api';
 import CartDrawer from './CartDrawer';
+import { ThemeToggle } from './ThemeToggle';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-white shadow-sm sticky top-0 z-40">
+      <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-40 transition-colors duration-200">
         {/* Top bar with contact info */}
         <div className="bg-orange-500 text-white py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,6 +85,9 @@ const Header: React.FC = () => {
 
             {/* Right side actions */}
             <div className="flex items-center space-x-4">
+              {/* Theme toggle */}
+              <ThemeToggle />
+              
               {/* Cart button */}
               <button
                 onClick={() => setIsCartOpen(true)}
