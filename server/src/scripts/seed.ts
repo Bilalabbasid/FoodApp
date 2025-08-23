@@ -29,7 +29,7 @@ async function seed() {
       name: 'Admin User',
       email: 'admin@tastycrave.com',
       phone: '+1-555-123-4567',
-      hashedPassword: 'Passw0rd!',
+      hashedPassword: 'Admin123!',
       roles: ['admin', 'manager'],
       loyaltyPoints: 0,
       isEmailVerified: true
@@ -37,11 +37,25 @@ async function seed() {
     await adminUser.save();
     console.log('Created admin user');
 
+    // Create kitchen staff user
+    const kitchenUser = new User({
+      name: 'Kitchen Staff',
+      email: 'kitchen@tastycrave.com',
+      phone: '+1-555-234-5678',
+      hashedPassword: 'Kitchen123!',
+      roles: ['kitchen'],
+      loyaltyPoints: 0,
+      isEmailVerified: true
+    });
+    await kitchenUser.save();
+    console.log('Created kitchen staff user');
+
     // Create customer user
     const customerUser = new User({
       name: 'John Doe',
       email: 'customer@example.com',
-      hashedPassword: 'password123',
+      phone: '+1-555-345-6789',
+      hashedPassword: 'Customer123!',
       roles: ['customer'],
       loyaltyPoints: 150,
       addresses: [{
@@ -56,6 +70,48 @@ async function seed() {
     });
     await customerUser.save();
     console.log('Created customer user');
+
+    // Create rider user
+    const riderUser = new User({
+      name: 'Delivery Rider',
+      email: 'rider@tastycrave.com',
+      phone: '+1-555-456-7890',
+      hashedPassword: 'Rider123!',
+      roles: ['rider'],
+      loyaltyPoints: 0,
+      isEmailVerified: true,
+      addresses: [{
+        type: 'home',
+        street: '789 Rider Lane',
+        city: 'New York',
+        state: 'NY',
+        zipCode: '10002',
+        isDefault: true
+      }]
+    });
+    await riderUser.save();
+    console.log('Created rider user');
+
+    // Create additional customer for testing
+    const customerUser2 = new User({
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      phone: '+1-555-567-8901',
+      hashedPassword: 'Jane123!',
+      roles: ['customer'],
+      loyaltyPoints: 75,
+      addresses: [{
+        type: 'work',
+        street: '456 Business Ave',
+        city: 'New York',
+        state: 'NY',
+        zipCode: '10003',
+        isDefault: true
+      }],
+      isEmailVerified: true
+    });
+    await customerUser2.save();
+    console.log('Created additional customer user');
 
     // Create main store
     const mainStore = new Store({
@@ -1195,12 +1251,21 @@ async function seed() {
     console.log('Created coupons');
 
     console.log('✅ Seed completed successfully!');
-    console.log('Admin login: admin@tastycrave.com / Passw0rd!');
-    console.log('Customer login: customer@example.com / password123');
-    console.log('Store: TastyCrave Downtown (slug: downtown)');
-    console.log('Available coupons: WELCOME10, FREESHIP');
-    console.log('Frontend: http://localhost:5173');
-    console.log('Backend: http://localhost:3001');
+    console.log('');
+    console.log('🔐 Login Credentials:');
+    console.log('👑 Admin: admin@tastycrave.com / Admin123!');
+    console.log('👨‍🍳 Kitchen: kitchen@tastycrave.com / Kitchen123!');
+    console.log('👤 Customer 1: customer@example.com / Customer123!');
+    console.log('👤 Customer 2: jane@example.com / Jane123!');
+    console.log('🏍️ Rider: rider@tastycrave.com / Rider123!');
+    console.log('');
+    console.log('🏪 Store: TastyCrave Downtown (slug: downtown)');
+    console.log('🎫 Available coupons: WELCOME10, FREESHIP');
+    console.log('🌐 Frontend: http://localhost:5173');
+    console.log('⚡ Backend: http://localhost:3001');
+    console.log('');
+    console.log('💡 Note: Real users can register with any email/password combination');
+    console.log('📧 All dummy users have verified emails for immediate login');
     
     process.exit(0);
   } catch (error) {

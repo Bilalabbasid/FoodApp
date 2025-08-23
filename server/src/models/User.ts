@@ -35,7 +35,7 @@ const userSchema = new Schema<IUser>({
   },
   roles: [{
     type: String,
-    enum: ['customer', 'staff', 'manager', 'admin'],
+    enum: ['customer', 'staff', 'manager', 'admin', 'kitchen', 'rider'],
     default: 'customer'
   }],
   hashedPassword: {

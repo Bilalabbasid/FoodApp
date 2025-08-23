@@ -27,7 +27,10 @@ import TermsOfServicePage from './pages/TermsOfServicePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminMenu from './pages/admin/AdminMenu';
+import AdminCustomers from './pages/admin/AdminCustomers';
+import AdminSettings from './pages/admin/AdminSettings';
 import KitchenDisplay from './pages/KitchenDisplay';
+import ApiTestPage from './pages/ApiTestPage';
 
 // Create query client
 const queryClient = new QueryClient({
@@ -64,6 +67,7 @@ const AppContent: React.FC = () => {
             <Route path="gift-cards" element={<GiftCardsPage />} />
             <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="api-test" element={<ApiTestPage />} />
             <Route 
               path="account" 
               element={
@@ -100,6 +104,22 @@ const AppContent: React.FC = () => {
             element={
               <ProtectedRoute requiredRoles={['admin', 'manager']}>
                 <AdminMenu />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="admin/customers" 
+            element={
+              <ProtectedRoute requiredRoles={['admin', 'manager']}>
+                <AdminCustomers />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="admin/settings" 
+            element={
+              <ProtectedRoute requiredRoles={['admin', 'manager']}>
+                <AdminSettings />
               </ProtectedRoute>
             } 
           />

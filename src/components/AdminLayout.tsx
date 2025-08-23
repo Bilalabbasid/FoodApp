@@ -10,7 +10,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
-import { api, handleApiSuccess } from '../utils/api';
+import { api, handleApiSuccess, handleApiError } from '../utils/api';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -23,12 +23,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await api.logout();
+      await api.auth.logout();
       logout();
       handleApiSuccess('Logged out successfully');
       navigate('/');
     } catch (error) {
-      console.error('Logout error:', error);
+      handleApiError(error);
     }
   };
 

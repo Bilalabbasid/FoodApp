@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star, MessageCircle, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useToast } from '../hooks/useToast';
+import { toast } from 'sonner';
 
 interface Review {
   id: string;
@@ -25,7 +25,6 @@ export default function ReviewsRatings({ itemId, itemName }: ReviewsRatingsProps
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { addToast } = useToast();
 
   // Load reviews from localStorage (in real app, this would be API call)
   useEffect(() => {
@@ -47,7 +46,7 @@ export default function ReviewsRatings({ itemId, itemName }: ReviewsRatingsProps
 
   const handleSubmitReview = async () => {
     if (!newReview.comment.trim()) {
-      addToast({ type: 'error', message: 'Please write a comment' });
+      toast.error('Please write a comment');
       return;
     }
 
@@ -71,7 +70,7 @@ export default function ReviewsRatings({ itemId, itemName }: ReviewsRatingsProps
     setNewReview({ rating: 5, comment: '' });
     setShowReviewForm(false);
     setIsSubmitting(false);
-    addToast({ type: 'success', message: 'Review submitted successfully!' });
+    toast.success('Review submitted successfully!');
   };
 
   const handleHelpfulVote = (reviewId: string, helpful: boolean) => {
@@ -82,10 +81,7 @@ export default function ReviewsRatings({ itemId, itemName }: ReviewsRatingsProps
     );
     setReviews(updatedReviews);
     localStorage.setItem(`reviews_${itemId}`, JSON.stringify(updatedReviews));
-    addToast({ 
-      type: 'info', 
-      message: helpful ? 'Marked as helpful' : 'Feedback noted' 
-    });
+    toast.success(helpful ? 'Marked as helpful' : 'Feedback noted');
   };
 
   const StarRating = ({ rating, onRatingChange, readonly = false }: { 

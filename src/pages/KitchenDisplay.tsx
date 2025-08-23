@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, CheckCircle, AlertCircle, Truck } from 'lucide-react';
+import { Clock, CheckCircle, AlertCircle, Truck, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { io, Socket } from 'socket.io-client';
 
 const KitchenDisplay: React.FC = () => {
   const [currentTime, setCurrentTime] = useState(new Date());

@@ -8,9 +8,11 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   server: {
+    port: 5173, // Preferred port
+    strictPort: false, // Allow Vite to automatically find next available port
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: process.env.VITE_API_URL || 'http://localhost:3001',
         changeOrigin: true,
       },
     },

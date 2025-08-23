@@ -34,10 +34,13 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     
     try {
-      const response = await api.login(data.email, data.password);
+      const response = await api.auth.login({
+        email: data.email,
+        password: data.password
+      });
       
-      if (response.success) {
-        setUser(response.data.user);
+      if (response.data.success) {
+        setUser(response.data.data.user);
         handleApiSuccess('Welcome back!');
         
         // Redirect to intended page or home
@@ -165,11 +168,19 @@ const LoginPage: React.FC = () => {
             <div className="mt-4 space-y-2 text-sm">
               <div className="bg-gray-50 p-3 rounded-lg">
                 <p className="font-medium text-gray-900">Admin Account:</p>
-                <p className="text-gray-600">admin@tastycrave.com / Passw0rd!</p>
+                <p className="text-gray-600">admin@tastycrave.com / Admin123!</p>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg">
                 <p className="font-medium text-gray-900">Customer Account:</p>
-                <p className="text-gray-600">customer@example.com / password123</p>
+                <p className="text-gray-600">customer@example.com / Customer123!</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <p className="font-medium text-gray-900">Kitchen Staff:</p>
+                <p className="text-gray-600">kitchen@tastycrave.com / Kitchen123!</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <p className="font-medium text-gray-900">Rider Account:</p>
+                <p className="text-gray-600">rider@tastycrave.com / Rider123!</p>
               </div>
             </div>
           </div>

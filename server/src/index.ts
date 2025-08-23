@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
+import net from 'net';
 import { connectMongoDB, connectRedis } from './config/database.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 
@@ -15,6 +16,12 @@ import storeRoutes from './routes/stores.js';
 import cartRoutes from './routes/cart.js';
 import orderRoutes from './routes/orders.js';
 import adminRoutes from './routes/admin.js';
+import riderRoutes from './routes/riders.js';
+import categoryRoutes from './routes/categories.js';
+import itemRoutes from './routes/items.js';
+import userRoutes from './routes/users.js';
+import couponRoutes from './routes/coupons.js';
+import kitchenRoutes from './routes/kitchen.js';
 
 // Load environment variables
 dotenv.config();
@@ -73,6 +80,12 @@ app.use('/api/v1/stores', storeRoutes);
 app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/riders', riderRoutes);
+app.use('/api/v1/categories', categoryRoutes);
+app.use('/api/v1/items', itemRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/coupons', couponRoutes);
+app.use('/api/v1/kitchen', kitchenRoutes);
 
 // Socket.IO for real-time updates
 io.on('connection', (socket) => {
@@ -111,7 +124,28 @@ app.use('*', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PREFERRED_PORT || process.env.PORT || 3001;
+
+// Function to find next available port
+async function findAvailablePort(startPort: number): Promise<number> {
+  const isPortAvailable = (port: number): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const server = net.createServer();
+      
+      server.listen(port, () => {
+        server.close(() => resolve(true));
+      });
+      
+      server.on('error', () => resolve(false));
+    });
+  };
+
+  let port = startPort;
+  while (!(await isPortAvailable(port))) {
+    port++;
+  }
+  return port;
+}
 
 async function startServer() {
   try {
@@ -125,10 +159,19 @@ async function startServer() {
     // Store Socket.IO instance globally
     (global as any).io = io;
     
-    server.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📱 Health check: http://localhost:${PORT}/health`);
+    // Find available port
+    const availablePort = await findAvailablePort(parseInt(PORT as string));
+    
+    server.listen(availablePort, () => {
+      console.log(`🚀 Server running on port ${availablePort}`);
+      console.log(`📱 Health check: http://localhost:${availablePort}/health`);
       console.log(`🌐 Frontend URL: ${process.env.CLIENT_URL}`);
+      
+      // If port changed, log the information
+      if (availablePort !== parseInt(PORT as string)) {
+        console.log(`⚠️  Port ${PORT} was occupied, using port ${availablePort} instead`);
+        console.log(`📋 Update your frontend API_BASE_URL to: http://localhost:${availablePort}/api/v1`);
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);

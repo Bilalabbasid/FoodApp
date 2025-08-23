@@ -73,8 +73,6 @@ class ApiService {
     
     refreshToken: () => this.api.post('/auth/refresh'),
     
-    getCurrentUser: () => this.api.get('/auth/me'),
-    
     forgotPassword: (email: string) =>
       this.api.post('/auth/forgot-password', { email }),
     
@@ -100,14 +98,7 @@ class ApiService {
     
     getById: (storeId: string) => this.api.get(`/stores/${storeId}`),
     
-    getBySlug: (slug: string) => this.api.get(`/stores/${slug}`),
-    
-    getMenu: (storeSlug: string, params?: {
-      category?: string;
-      search?: string;
-      dietary?: string;
-      tag?: string;
-    }) => this.api.get(`/stores/${storeSlug}/menu`, { params }),
+    getBySlug: (slug: string) => this.api.get(`/stores/slug/${slug}`),
     
     getNearby: (lat: number, lng: number, radius?: number) =>
       this.api.get('/stores/nearby', { params: { lat, lng, radius } }),

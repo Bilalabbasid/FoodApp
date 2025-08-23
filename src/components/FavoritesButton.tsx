@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useToast } from './Toast';
+import { toast } from 'sonner';
 
 interface FavoritesButtonProps {
   itemId: string;
@@ -17,7 +17,6 @@ export default function FavoritesButton({
   size = 16 
 }: FavoritesButtonProps) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const { showToast } = useToast();
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -33,10 +32,10 @@ export default function FavoritesButton({
 
     if (isFavorite) {
       newFavorites = favorites.filter((id: string) => id !== itemId);
-      showToast('Removed from favorites', 'info');
+      toast.success('Removed from favorites');
     } else {
       newFavorites = [...favorites, itemId];
-      showToast(`${itemName} added to favorites`, 'success');
+      toast.success(`${itemName} added to favorites`);
     }
 
     localStorage.setItem('favorites', JSON.stringify(newFavorites));

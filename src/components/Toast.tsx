@@ -12,6 +12,7 @@ interface Toast {
 interface ToastContextType {
   addToast: (toast: Omit<Toast, 'id'>) => void;
   removeToast: (id: string) => void;
+  showToast: (message: string, type: 'success' | 'error' | 'warning' | 'info', duration?: number) => void;
 }
 
 export const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -34,6 +35,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
+
+  const showToast = useCallback((message: string, type: 'success' | 'error' | 'warning' | 'info', duration?: number) => {
+    addToast({ message, type, duration });
+  }, [addToast]);
 
   const getIcon = (type: Toast['type']) => {
     switch (type) {
@@ -62,7 +67,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <ToastContext.Provider value={{ addToast, removeToast }}>
+    <ToastContext.Provider value={{ addToast, removeToast, showToast }}>
       {children}
       
       {/* Toast container */}

@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   phone?: string;
-  roles: ('customer' | 'staff' | 'manager' | 'admin')[];
+  roles: ('customer' | 'staff' | 'manager' | 'admin' | 'kitchen' | 'rider')[];
   hashedPassword: string;
   loyaltyPoints: number;
   addresses: Address[];

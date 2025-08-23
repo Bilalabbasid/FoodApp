@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CreditCard, Smartphone, DollarSign, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useToast } from '../hooks/useToast';
+import { toast } from 'sonner';
 import { useCart } from '../hooks/useCart';
 
 interface PaymentMethod {
@@ -67,7 +67,6 @@ export default function PaymentIntegration({ onPaymentComplete, onCancel }: Paym
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { addToast } = useToast();
   const { summary } = useCart();
 
   const validateCardNumber = (number: string) => {
@@ -152,7 +151,7 @@ export default function PaymentIntegration({ onPaymentComplete, onCancel }: Paym
 
   const handlePayment = async () => {
     if (!validateForm()) {
-      addToast({ type: 'error', message: 'Please fix the errors below' });
+      toast.error('Please fix the errors below');
       return;
     }
 
@@ -173,7 +172,7 @@ export default function PaymentIntegration({ onPaymentComplete, onCancel }: Paym
           status: 'completed'
         };
         
-        addToast({ type: 'success', message: 'Payment successful!' });
+        toast.success('Payment successful!');
         onPaymentComplete(paymentResult);
       } else if (selectedMethod === 'apple-pay' || selectedMethod === 'google-pay') {
         // Simulate digital wallet payment
@@ -184,7 +183,7 @@ export default function PaymentIntegration({ onPaymentComplete, onCancel }: Paym
           status: 'completed'
         };
         
-        addToast({ type: 'success', message: 'Payment successful!' });
+        toast.success('Payment successful!');
         onPaymentComplete(paymentResult);
       } else if (selectedMethod === 'cash') {
         // Cash on delivery
@@ -195,11 +194,11 @@ export default function PaymentIntegration({ onPaymentComplete, onCancel }: Paym
           status: 'pending'
         };
         
-        addToast({ type: 'success', message: 'Order confirmed! Pay on delivery.' });
+        toast.success('Order confirmed! Pay on delivery.');
         onPaymentComplete(paymentResult);
       }
     } catch {
-      addToast({ type: 'error', message: 'Payment failed. Please try again.' });
+      toast.error('Payment failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }

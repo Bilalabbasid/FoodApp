@@ -42,11 +42,12 @@ const RegisterPage: React.FC = () => {
     setIsLoading(true);
     
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...registerData } = data;
-      const response = await api.register(registerData);
+      const response = await api.auth.register(registerData);
       
-      if (response.success) {
-        setUser(response.data.user);
+      if (response.data.success) {
+        setUser(response.data.data.user);
         handleApiSuccess('Account created successfully!');
         navigate('/');
       }

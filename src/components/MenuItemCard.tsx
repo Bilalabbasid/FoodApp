@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Clock, Star, Plus, Leaf, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../hooks/useCart';
-import { useToast } from './Toast';
+import { toast } from 'sonner';
 import { CartItem } from '../store/cartStore';
 
 interface MenuItemCardProps {
@@ -26,9 +26,9 @@ interface MenuItemCardProps {
 }
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const { addItem } = useCart();
-  const { showToast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,16 +45,15 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
     };
 
     addItem(cartItem, 'default-store');
-    showToast(`${item.name} added to cart!`, 'success');
+    toast.success(`${item.name} added to cart!`);
   };
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsFavorite(!isFavorite);
-    showToast(
-      isFavorite ? 'Removed from favorites' : 'Added to favorites',
-      isFavorite ? 'info' : 'success'
+    toast.success(
+      isFavorite ? 'Removed from favorites' : 'Added to favorites'
     );
   };
 

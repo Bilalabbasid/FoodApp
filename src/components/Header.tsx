@@ -16,7 +16,7 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await api.logout();
+      await api.auth.logout();
       logout();
       handleApiSuccess('Logged out successfully');
       navigate('/');

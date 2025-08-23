@@ -63,6 +63,7 @@ const AdminMenu: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [items, setItems] = useState<MenuItem[]>([]);
+  const [storeId, setStoreId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<EditForm>({
@@ -85,13 +86,19 @@ const AdminMenu: React.FC = () => {
   const fetchData = async () => {
     try {
       setIsLoading(true);
+      
+      // First get the store by slug to get the actual store ID
+      const storeRes = await api.stores.getBySlug('downtown');
+      const actualStoreId = storeRes.data._id;
+      setStoreId(actualStoreId);
+      
       const [categoriesRes, itemsRes] = await Promise.all([
-        api.get('/stores/downtown/categories'),
-        api.get('/stores/downtown/items')
+        api.categories.getAll({ storeId: actualStoreId }),
+        api.items.getAll({ storeId: actualStoreId })
       ]);
       
-      setCategories(categoriesRes.data);
-      setItems(itemsRes.data);
+      setCategories(categoriesRes.data.data || []);
+      setItems(itemsRes.data.data || []);
     } catch (error) {
       toast.error('Failed to load menu data');
       console.error('Error fetching data:', error);
@@ -102,7 +109,7 @@ const AdminMenu: React.FC = () => {
 
   const toggleAvailability = async (itemId: string, currentStatus: boolean) => {
     try {
-      await api.patch(`/admin/items/${itemId}`, {
+      await api.admin.updateItem(itemId, {
         isAvailable: !currentStatus
       });
       
@@ -153,7 +160,7 @@ const AdminMenu: React.FC = () => {
     try {
       if (itemId) {
         // Update existing item
-        await api.patch(`/admin/items/${itemId}`, editForm);
+        await api.admin.updateItem(itemId, editForm);
         setItems(items.map(item => 
           item._id === itemId 
             ? { 
@@ -167,11 +174,11 @@ const AdminMenu: React.FC = () => {
         setEditingItem(null);
       } else {
         // Create new item
-        const response = await api.post('/admin/items', {
+        const response = await api.admin.createItem({
           ...editForm,
-          storeId: 'downtown' // Use actual store ID
+          storeId: storeId // Use actual store ID
         });
-        setItems([...items, response.data]);
+        setItems([...items, response.data.data]);
         toast.success('Item created successfully');
         setShowAddForm(false);
       }
@@ -188,7 +195,7 @@ const AdminMenu: React.FC = () => {
     if (!confirm('Are you sure you want to delete this item?')) return;
     
     try {
-      await api.delete(`/admin/items/${itemId}`);
+      await api.admin.deleteItem(itemId);
       setItems(items.filter(item => item._id !== itemId));
       toast.success('Item deleted successfully');
     } catch (error) {

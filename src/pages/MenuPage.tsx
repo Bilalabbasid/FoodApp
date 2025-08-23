@@ -39,7 +39,7 @@ const MenuPage: React.FC = () => {
 
   const { data: menuData, isLoading, error } = useQuery({
     queryKey: ['menu', DEFAULT_STORE_ID, selectedCategory, searchTerm, selectedDietary],
-    queryFn: () => api.getStoreMenu(DEFAULT_STORE_ID, {
+    queryFn: () => api.stores.getMenu(DEFAULT_STORE_ID, {
       ...(selectedCategory && { category: selectedCategory }),
       ...(searchTerm && { search: searchTerm }),
       ...(selectedDietary && { dietary: selectedDietary })
